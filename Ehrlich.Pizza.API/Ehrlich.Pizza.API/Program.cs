@@ -1,4 +1,5 @@
 using Ehrlich.Pizza.API.Models;
+using Ehrlich.Pizza.API.Providers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 builder.Services.AddDbContext<PizzaPlaceDbContext>();
+builder.Services.AddApiVersioning();
+builder.Services.AddScoped<IOrdersProvider, OrdersProvider>();
 
 var app = builder.Build();
 
