@@ -20,8 +20,8 @@ namespace Ehrlich.Pizza.API.Providers
         }
         public async Task<GetPizzaInfo.Response> GetPizzaInfoAsync(string id)
         {
-            List<PizzaType> pizzas = new List<PizzaType> { };
-            var pizzaQuery = _context.PizzaTypes.AsQueryable();
+            List<Models.Pizza> pizzas = new List<Models.Pizza> { };
+            var pizzaQuery = _context.Pizzas.Include(o => o.PizzaType).AsQueryable();
             if (id == null)
             {
                 pizzas = await pizzaQuery.ToListAsync();
@@ -30,7 +30,7 @@ namespace Ehrlich.Pizza.API.Providers
                 };
             }
 
-            pizzas = await pizzaQuery.Where(o => o.PizzaTypeId == id).ToListAsync();
+            pizzas = await pizzaQuery.Where(o => o.PizzaId == id).ToListAsync();
             return new GetPizzaInfo.Response()
             {
                 Pizzas = pizzas,

@@ -7,7 +7,7 @@ namespace Ehrlich.Pizza.API.Requests
     {
         public class Response
         {
-            public List<PizzaType>? Pizzas { get; set; }
+            public List<Models.Pizza>? Pizzas { get; set; }
             public ActionResult? Result { get; set; } = new OkResult();
         }
     }
