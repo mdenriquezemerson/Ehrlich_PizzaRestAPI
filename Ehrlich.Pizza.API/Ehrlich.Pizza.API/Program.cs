@@ -20,6 +20,7 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "REST API for Pizza Place's Database"
     });
+    c.CustomSchemaIds(type => type.FullName);
 });
 builder.Services.AddDbContext<PizzaPlaceDbContext>();
 builder.Services.AddApiVersioning();

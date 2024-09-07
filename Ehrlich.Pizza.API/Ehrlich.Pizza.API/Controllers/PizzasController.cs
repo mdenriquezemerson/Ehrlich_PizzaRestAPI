@@ -29,13 +29,20 @@ namespace Ehrlich.Pizza.API.Controllers
             var result = await _provider.GetPizzaPriceAsync(query);
             return Ok(result);
         }
-        /* 
-         * Endpoints:
-         * Price of Pizza (Pizza type id and Size)
-         * Name, Category, Ingredients of Pizza DONE
-         * Pizzas per category with 
-          
-        */
+
+        [HttpPost]
+        public async Task<IActionResult> AddPizzaType([FromQuery] AddPizzaType.Request request)
+        {
+            var result = await _provider.AddPizzaTypeAsync(request);
+            return Ok(result);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdatePizzaType([FromQuery] UpdatePizzaType.Request request)
+        {
+            var result = await _provider.UpdatePizzaTypeAsync(request);
+            return Ok(result);
+        }
 
     }
 }
