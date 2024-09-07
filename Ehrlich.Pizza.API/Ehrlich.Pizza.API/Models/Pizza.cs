@@ -19,3 +19,12 @@ public partial class Pizza
 
     public virtual PizzaType? PizzaType { get; set; }
 }
+
+public enum PizzaSize
+{
+    S,
+    M,
+    L,
+    XL,
+    XXL
+}
