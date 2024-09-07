@@ -1,0 +1,6 @@
+@Ehrlich.Pizza.API_HostAddress = http://localhost:5258
+
+GET {{Ehrlich.Pizza.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
