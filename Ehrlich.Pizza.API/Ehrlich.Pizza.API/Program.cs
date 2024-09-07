@@ -19,7 +19,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddDbContext<PizzaPlaceDbContext>();
 builder.Services.AddApiVersioning();
-builder.Services.AddScoped<IOrdersProvider, OrdersProvider>();
+builder.Services.AddScoped<IOrdersProvider, OrdersProvider>()
+    .AddScoped<IPizzasProvider, PizzasProvider>();
 
 var app = builder.Build();
 
