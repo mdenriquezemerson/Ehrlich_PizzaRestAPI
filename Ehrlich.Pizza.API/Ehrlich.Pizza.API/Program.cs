@@ -1,3 +1,5 @@
+using Ehrlich.Pizza.API.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,6 +16,7 @@ builder.Services.AddSwaggerGen(c =>
         Description = "REST API for Pizza Place's Database"
     });
 });
+builder.Services.AddDbContext<PizzaPlaceDbContext>();
 
 var app = builder.Build();
 
