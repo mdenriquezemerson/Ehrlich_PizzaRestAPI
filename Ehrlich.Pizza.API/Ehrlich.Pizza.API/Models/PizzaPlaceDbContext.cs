@@ -30,12 +30,12 @@ public partial class PizzaPlaceDbContext : DbContext
     {
         modelBuilder.Entity<Order>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("orders");
+            entity.ToTable("orders");
 
+            entity.Property(e => e.OrderId)
+                .ValueGeneratedNever()
+                .HasColumnName("order_id");
             entity.Property(e => e.Date).HasColumnName("date");
-            entity.Property(e => e.OrderId).HasColumnName("order_id");
             entity.Property(e => e.Time)
                 .HasPrecision(0)
                 .HasColumnName("time");
@@ -43,24 +43,32 @@ public partial class PizzaPlaceDbContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("order_details");
+            entity.HasKey(e => e.OrderDetailsId);
 
-            entity.Property(e => e.OrderDetailsId).HasColumnName("order_details_id");
+            entity.ToTable("order_details");
+
+            entity.Property(e => e.OrderDetailsId)
+                .ValueGeneratedNever()
+                .HasColumnName("order_details_id");
             entity.Property(e => e.OrderId).HasColumnName("order_id");
             entity.Property(e => e.PizzaId)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("pizza_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
+
+            entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
+                .HasForeignKey(d => d.OrderId)
+                .HasConstraintName("FK_order_details_orders");
+
+            entity.HasOne(d => d.Pizza).WithMany(p => p.OrderDetails)
+                .HasForeignKey(d => d.PizzaId)
+                .HasConstraintName("FK_order_details_pizzas");
         });
 
         modelBuilder.Entity<Pizza>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("pizzas");
+            entity.ToTable("pizzas");
 
             entity.Property(e => e.PizzaId)
                 .HasMaxLength(50)
@@ -75,14 +83,20 @@ public partial class PizzaPlaceDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("size");
+
+            entity.HasOne(d => d.PizzaType).WithMany(p => p.Pizzas)
+                .HasForeignKey(d => d.PizzaTypeId)
+                .HasConstraintName("FK_pizzas_pizza_types");
         });
 
         modelBuilder.Entity<PizzaType>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("pizza_types");
+            entity.ToTable("pizza_types");
 
+            entity.Property(e => e.PizzaTypeId)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("pizza_type_id");
             entity.Property(e => e.Category)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -94,10 +108,6 @@ public partial class PizzaPlaceDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("name");
-            entity.Property(e => e.PizzaTypeId)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("pizza_type_id");
         });
 
         OnModelCreatingPartial(modelBuilder);
