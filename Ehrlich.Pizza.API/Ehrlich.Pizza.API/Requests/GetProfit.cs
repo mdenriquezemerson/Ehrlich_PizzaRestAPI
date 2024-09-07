@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Ehrlich.Pizza.API.Models;
+﻿using Ehrlich.Pizza.API.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ehrlich.Pizza.API.Requests
 {
-    public class GetOrderAmount
+    public class GetProfit
     {
         public class Query
         {
@@ -19,7 +19,7 @@ namespace Ehrlich.Pizza.API.Requests
 
         public class Response
         {
-            public int OrderAmount { get; set; }
+            public float? TotalProfit { get; set; }
             public ActionResult? Result { get; set; } = new OkResult();
         }
     }

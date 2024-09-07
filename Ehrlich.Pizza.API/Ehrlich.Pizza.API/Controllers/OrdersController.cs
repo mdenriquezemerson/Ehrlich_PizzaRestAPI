@@ -32,5 +32,12 @@ namespace Ehrlich.Pizza.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("Profit")]
+        public async Task<IActionResult> GetProfit([FromQuery] GetProfit.Query query)
+        {
+            var result = await _provider.GetProfitAsync(query);
+            return Ok(result);
+        }
+
     }
 }
