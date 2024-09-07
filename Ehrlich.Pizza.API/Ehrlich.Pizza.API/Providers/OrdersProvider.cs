@@ -65,6 +65,10 @@ namespace Ehrlich.Pizza.API.Providers
             var profitQuery = _context.OrderDetails.Include(o => o.Order).Include(o => o.Pizza).AsQueryable();
             profitQuery = profitQuery.Where(o => o.Order.Date >= DateOnly.FromDateTime(query.StartDate) && o.Order.Date <= DateOnly.FromDateTime(query.EndDate));
             profitQuery = profitQuery.Where(o => o.Order.Time >= TimeOnly.Parse(query.StartTime) && o.Order.Time <= TimeOnly.Parse(query.EndTime));
+            if (query.PizzaIds != null && query.PizzaIds.Any())
+            {
+                profitQuery = profitQuery.Where(o => query.PizzaIds.Contains(o.PizzaId));
+            }
             var orderDetails = await profitQuery.ToListAsync();
             foreach (var orderDetail in orderDetails)
             {
@@ -116,6 +120,8 @@ namespace Ehrlich.Pizza.API.Providers
             query.EndTime = !TimeOnly.TryParse(query.EndTime, out endTime) ? "23:59:59" : query.EndTime;
             //if invalid value provided, set the start time to midnight
             query.StartTime = !TimeOnly.TryParse(query.StartTime, out startTime) ? "00:00:00" : query.StartTime;
+            //convert all pizzaids to lowercase
+            query.PizzaIds = query.PizzaIds.Select(item => item.ToLower()).ToList();
 
             return query;
         }
