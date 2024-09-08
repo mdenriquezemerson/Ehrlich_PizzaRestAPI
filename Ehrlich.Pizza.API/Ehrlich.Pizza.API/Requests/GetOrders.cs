@@ -15,7 +15,7 @@ namespace Ehrlich.Pizza.API.Requests
             //if no value provided, set the start time to midnight
             public string StartTime { get; set; } = "00:00:00";
             //If no value provided, set the end time to time now
-            public string EndTime { get; set; } = DateTime.Now.ToString("HH:mm:ss");
+            public string EndTime { get; set; } = "23:59:59";
             //If no value provided, set Page Size to 1000
             public int PS { get; set; } = 1000;
             //If no value provided, set Page Number to 1

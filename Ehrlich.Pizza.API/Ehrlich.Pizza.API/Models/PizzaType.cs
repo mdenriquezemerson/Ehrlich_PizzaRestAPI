@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Ehrlich.Pizza.API.Models;
 
@@ -13,5 +14,6 @@ public partial class PizzaType
 
     public string? Ingredients { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<Pizza> Pizzas { get; set; } = new List<Pizza>();
 }

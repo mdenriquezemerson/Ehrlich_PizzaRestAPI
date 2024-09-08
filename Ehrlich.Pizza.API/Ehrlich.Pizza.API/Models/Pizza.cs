@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Ehrlich.Pizza.API.Models;
 
@@ -13,7 +14,17 @@ public partial class Pizza
 
     public float? Price { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     public virtual PizzaType? PizzaType { get; set; }
+}
+
+public enum PizzaSize
+{
+    S,
+    M,
+    L,
+    XL,
+    XXL
 }

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Ehrlich.Pizza.API.Models;
+﻿using Ehrlich.Pizza.API.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Ehrlich.Pizza.API.Requests
 {
-    public class GetOrderAmount
+    public class GetProfit
     {
         public class Query
         {
@@ -15,11 +15,12 @@ namespace Ehrlich.Pizza.API.Requests
             public string StartTime { get; set; } = "00:00:00";
             //If no value provided, set the end time to time now
             public string EndTime { get; set; } = "23:59:59";
+            public List<string> PizzaIds { get; set; } = new List<string>();
         }
 
         public class Response
         {
-            public int OrderAmount { get; set; }
+            public float? TotalProfit { get; set; }
             public ActionResult? Result { get; set; } = new OkResult();
         }
     }
