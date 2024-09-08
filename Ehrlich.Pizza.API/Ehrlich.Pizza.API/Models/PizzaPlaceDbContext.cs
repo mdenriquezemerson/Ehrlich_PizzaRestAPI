@@ -23,6 +23,7 @@ public partial class PizzaPlaceDbContext : DbContext
 
     public virtual DbSet<PizzaType> PizzaTypes { get; set; }
 
+    //TODO: Add to appsettings and encrypt
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Data Source=LAPTOP-1URGSGQ7;Initial Catalog=PizzaPlaceDb;Integrated Security=True;Encrypt=False");
 
