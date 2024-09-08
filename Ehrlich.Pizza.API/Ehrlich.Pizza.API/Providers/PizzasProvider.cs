@@ -26,6 +26,10 @@ namespace Ehrlich.Pizza.API.Providers
             _context = context;
         }
 
+        /// <summary>
+        ///     Retrieves pizza information based on a given PizzaId. If no id is provided, it returns all pizzas.
+        /// </summary>
+        /// <param name="id">The PizzaId to search for</param>
         public async Task<AddPizzaType.Response> AddPizzaTypeAsync(AddPizzaType.Request request)
         {
             var pizzaType = new PizzaType
@@ -50,6 +54,10 @@ namespace Ehrlich.Pizza.API.Providers
             };
         }
 
+        /// <summary>
+        ///     Retrieves the price of a pizza based on its PizzaTypeId and size.
+        /// </summary>
+        /// <param name="query">Query parameters including PizzaTypeId and size</param>
         public async Task<UpdatePizzaType.Response> UpdatePizzaTypeAsync(UpdatePizzaType.Request request)
         {
             var pizza = await _context.PizzaTypes.FindAsync(request.PizzaTypeId);
@@ -82,6 +90,10 @@ namespace Ehrlich.Pizza.API.Providers
             };
         }
 
+        /// <summary>
+        ///     Adds a new pizza type with specific attributes like name, category, and ingredients.
+        /// </summary>
+        /// <param name="request">Request containing pizza type details</param>
         public async Task<AddPizzaItem.Response> AddPizzaItemAsync(AddPizzaItem.Request request)
         {
             request.Size = request.Size.ToUpper();
@@ -135,6 +147,11 @@ namespace Ehrlich.Pizza.API.Providers
                 Success = false,
             };
         }
+
+        /// <summary>
+        ///     Updates an existing pizza type, allowing modifications to name, category, and ingredients.
+        /// </summary>
+        /// <param name="request">Request containing updated pizza type details</param>
         public async Task<UpdatePizzaItemPrice.Response> UpdatePizzaItemPriceAsync(UpdatePizzaItemPrice.Request request)
         {
             if (request.Price <= 0)
@@ -172,6 +189,10 @@ namespace Ehrlich.Pizza.API.Providers
             };
         }
 
+        /// <summary>
+        ///     Adds a new pizza item with a specific size and price, linked to an existing pizza type.
+        /// </summary>
+        /// <param name="request">Request containing pizza item details</param>
         public async Task<GetPizzaInfo.Response> GetPizzaInfoAsync(string id)
         {
             List<Models.Pizza> pizzas = new List<Models.Pizza> { };
@@ -191,6 +212,10 @@ namespace Ehrlich.Pizza.API.Providers
             };
         }
 
+        /// <summary>
+        ///     Updates the price of an existing pizza item.
+        /// </summary>
+        /// <param name="request">Request containing the pizza item ID and new price</param>
         public async Task<GetPizzaPrice.Response> GetPizzaPriceAsync(GetPizzaPrice.Query query)
         {
             var pizzaPrice = 0f;

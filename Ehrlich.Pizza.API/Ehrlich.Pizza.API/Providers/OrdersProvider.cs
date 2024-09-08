@@ -26,6 +26,11 @@ namespace Ehrlich.Pizza.API.Providers
             _context = context;
         }
 
+        /// <summary>
+        ///     Retrieves a list of orders based on query filters like OrderId, date, and time range.
+        ///     Supports pagination with Page Number (PN) and Page Size (PS).
+        /// </summary>
+        /// <param name="query">Query parameters including filters for orders</param>
         public async Task<GetOrders.Response> GetOrdersAsync(GetOrders.Query query)
         {
             List<Order> orders = new List<Order> { };
@@ -53,6 +58,10 @@ namespace Ehrlich.Pizza.API.Providers
             };
         }
 
+        /// <summary>
+        ///     Retrieves the total count of orders within a specified date and time range.
+        /// </summary>
+        /// <param name="query">Query parameters for filtering orders</param>
         public async Task<GetOrderAmount.Response> GetOrderAmountAsync(GetOrderAmount.Query query)
         {
             query = SanitizeGetOrderAmountQuery(query);
@@ -65,6 +74,11 @@ namespace Ehrlich.Pizza.API.Providers
             };
         }
 
+        /// <summary>
+        ///     Calculates the total profit from orders within a specified date and time range.
+        ///     Allows filtering by specific Pizza IDs.
+        /// </summary>
+        /// <param name="query">Query parameters for calculating profit</param>
         public async Task<GetProfit.Response> GetProfitAsync(GetProfit.Query query)
         {
             float? totalProfit = 0f;
@@ -87,6 +101,10 @@ namespace Ehrlich.Pizza.API.Providers
             };
         }
 
+        /// <summary>
+        ///     Adds a new order with a specific date and time. Generates a new OrderId.
+        /// </summary>
+        /// <param name="dateTime">The date and time of the new order</param>
         public async Task<AddOrder.Response> AddOrderAsync(DateTime dateTime)
         {
             DateOnly date = DateOnly.FromDateTime(dateTime);
@@ -110,6 +128,11 @@ namespace Ehrlich.Pizza.API.Providers
             };
         }
 
+        /// <summary>
+        ///     Updates an existing order's date and time based on its OrderId.
+        ///     Returns success status or an error message if the update fails.
+        /// </summary>
+        /// <param name="request">Request object containing the order information to update</param>
         public async Task<UpdateOrder.Response> UpdateOrderAsync(UpdateOrder.Request request)
         {
             Order order = await _context.Orders.FindAsync(request.OrderId);
@@ -130,6 +153,10 @@ namespace Ehrlich.Pizza.API.Providers
             };
         }
 
+        /// <summary>
+        ///     Adds a new order detail for an existing order. Validates the order and pizza IDs, and checks if the quantity is greater than 0.
+        /// </summary>
+        /// <param name="request">Request object containing the order detail information</param>
         public async Task<AddOrderDetail.Response> AddOrderDetailAsync(AddOrderDetail.Request request)
         {
             if (request.Quantity <= 0)
@@ -187,6 +214,11 @@ namespace Ehrlich.Pizza.API.Providers
             };
         }
 
+        /// <summary>
+        ///     Updates an existing order detail, including the OrderId, PizzaId, and Quantity.
+        ///     Returns success or failure with appropriate messages.
+        /// </summary>
+        /// <param name="request">Request object containing the updated order detail information</param>
         public async Task<UpdateOrderDetail.Response> UpdateOrderDetailAsync(UpdateOrderDetail.Request request)
         {
             if (request.Quantity <= 0)
@@ -229,6 +261,11 @@ namespace Ehrlich.Pizza.API.Providers
             };
         }
 
+        /// <summary>
+        ///     Deletes an order detail based on its OrderDetailId.
+        ///     Returns success or failure with appropriate messages.
+        /// </summary>
+        /// <param name="orderDetailId">The ID of the order detail to be deleted</param>
         public async Task<DeleteOrderDetail.Response> DeleteOrderDetailAsync(long orderDetailId)
         {
             var orderDetail = await _context.OrderDetails.Where(od => od.OrderDetailsId == orderDetailId).FirstOrDefaultAsync();
