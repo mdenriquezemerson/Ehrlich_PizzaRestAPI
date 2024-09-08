@@ -15,7 +15,6 @@ namespace Ehrlich.Pizza.API.Controllers
             _provider = provider;
         }
 
-        //returns 
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] string? id)
         {
