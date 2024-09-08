@@ -13,6 +13,9 @@ namespace Ehrlich.Pizza.API.Providers
         Task<GetProfit.Response> GetProfitAsync(GetProfit.Query query);
         Task<AddOrder.Response> AddOrderAsync(DateTime dateTime);
         Task<UpdateOrder.Response> UpdateOrderAsync(UpdateOrder.Request request);
+        Task<AddOrderDetail.Response> AddOrderDetailAsync(AddOrderDetail.Request request);
+        Task<UpdateOrderDetail.Response> UpdateOrderDetailAsync(UpdateOrderDetail.Request request);
+        Task<DeleteOrderDetail.Response> DeleteOrderDetailAsync(long orderDetailId);
     }
 
     public class OrdersProvider : IOrdersProvider
@@ -124,6 +127,134 @@ namespace Ehrlich.Pizza.API.Providers
             {
                 Success = false,
                 Result = new BadRequestObjectResult("Update operation failed."),
+            };
+        }
+
+        public async Task<AddOrderDetail.Response> AddOrderDetailAsync(AddOrderDetail.Request request)
+        {
+            if (request.Quantity <= 0)
+            {
+                return new AddOrderDetail.Response
+                {
+                    Success = false,
+                    Result = new BadRequestObjectResult("Quantity must be greater than 0."),
+                };
+            }
+
+            var order = await _context.Orders.FindAsync(request.OrderId);
+            if (order == null)
+            {
+                return new AddOrderDetail.Response
+                {
+                    Success = false,
+                    Result = new BadRequestObjectResult("Order ID does not exist."),
+                };
+            }
+
+            var pizza = await _context.Pizzas.FindAsync(request.PizzaId);
+            if (pizza == null)
+            {
+                return new AddOrderDetail.Response
+                {
+                    Success = false,
+                    Result = new BadRequestObjectResult("Pizza ID does not exist."),
+                };
+            }
+
+            long latestOrderDetailId = await _context.OrderDetails.MaxAsync(o => o.OrderDetailsId);
+            var orderDetail = new OrderDetail
+            {
+                OrderDetailsId = latestOrderDetailId + 1,
+                OrderId = request.OrderId,
+                PizzaId = request.PizzaId,
+                Quantity = request.Quantity,
+            };
+
+            _context.OrderDetails.Add(orderDetail);
+            int result = await _context.SaveChangesAsync();
+
+            if (result > 0)
+            {
+                return new AddOrderDetail.Response
+                {
+                    Success = true,
+                };
+            }
+            return new AddOrderDetail.Response
+            {
+                Success = false,
+                Result = new BadRequestObjectResult("Failed to add order detail."),
+            };
+        }
+
+        public async Task<UpdateOrderDetail.Response> UpdateOrderDetailAsync(UpdateOrderDetail.Request request)
+        {
+            if (request.Quantity <= 0)
+            {
+                return new UpdateOrderDetail.Response
+                {
+                    Success = false,
+                    Result = new BadRequestObjectResult("Quantity must be greater than 0."),
+                };
+            }
+
+            var orderDetail = await _context.OrderDetails.Where(od => od.OrderDetailsId == request.OrderDetailsId).FirstOrDefaultAsync();
+            if (orderDetail == null)
+            {
+                return new UpdateOrderDetail.Response
+                {
+                    Success = false,
+                    Result = new BadRequestObjectResult("Order detail does not exist."),
+                };
+            }
+
+            orderDetail.OrderId = request.OrderId;
+            orderDetail.PizzaId = request.PizzaId;
+            orderDetail.Quantity = request.Quantity;
+
+            _context.OrderDetails.Update(orderDetail);
+            int result = await _context.SaveChangesAsync();
+
+            if (result > 0)
+            {
+                return new UpdateOrderDetail.Response
+                {
+                    Success = true,
+                };
+            }
+            return new UpdateOrderDetail.Response
+            {
+                Success = false,
+                Result = new BadRequestObjectResult("Failed to update order detail."),
+            };
+        }
+
+        public async Task<DeleteOrderDetail.Response> DeleteOrderDetailAsync(long orderDetailId)
+        {
+            var orderDetail = await _context.OrderDetails.Where(od => od.OrderDetailsId == orderDetailId).FirstOrDefaultAsync();
+            if (orderDetail == null)
+            {
+                return new DeleteOrderDetail.Response
+                {
+                    Success = false,
+                    Result = new BadRequestObjectResult("Order detail does not exist."),
+                };
+            }
+
+            _context.OrderDetails.Remove(orderDetail);
+            int result = await _context.SaveChangesAsync();
+
+            if (result > 0)
+            {
+                return new DeleteOrderDetail.Response
+                {
+                    Success = true,
+                };
+            }
+            return new DeleteOrderDetail.Response
+            {
+                Success = false,
+                Result = new BadRequestObjectResult("Failed to delete order detail."),
             };
         }
 

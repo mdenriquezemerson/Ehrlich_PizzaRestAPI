@@ -20,14 +20,14 @@ namespace Ehrlich.Pizza.API.Controllers
         public async Task<IActionResult> Get([FromQuery] string? id)
         {
             var result = await _provider.GetPizzaInfoAsync(id);
-            return result.Result;
+            return Ok(result);
         }
 
         [HttpGet("Price")]
         public async Task<IActionResult> GetPizzaPrice([FromQuery] GetPizzaPrice.Query query)
         {
             var result = await _provider.GetPizzaPriceAsync(query);
-            return result.Result;
+            return Ok(result);
         }
 
         [HttpPost("PizzaType")]
