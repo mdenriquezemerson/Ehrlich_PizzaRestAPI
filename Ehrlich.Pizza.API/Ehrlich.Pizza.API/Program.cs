@@ -1,10 +1,15 @@
 using Ehrlich.Pizza.API.Models;
 using Ehrlich.Pizza.API.Providers;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddJsonFile(Path.Combine(AppContext.BaseDirectory, "appsettings.json"), optional: false, reloadOnChange: true);
+builder.Host.UseSerilog((hostContext, loggerConfiguration) =>
+{
+    loggerConfiguration.ReadFrom.Configuration(hostContext.Configuration);
+});
 
 // Add services to the container.
-
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
