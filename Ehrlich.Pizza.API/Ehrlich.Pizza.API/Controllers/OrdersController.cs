@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Ehrlich.Pizza.API.Requests;
 using Ehrlich.Pizza.API.Providers;
+using System;
 
 namespace Ehrlich.Pizza.API.Controllers
 {
@@ -39,5 +40,18 @@ namespace Ehrlich.Pizza.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Post([FromQuery] DateTime dateTime)
+        {
+            var result = await _provider.AddOrderAsync(dateTime);
+            return result.Result;
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Put([FromQuery] UpdateOrder.Request request)
+        {
+            var result = await _provider.UpdateOrderAsync(request);
+            return result.Result;
+        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Ehrlich.Pizza.API.Models;
 using Ehrlich.Pizza.API.Requests;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ehrlich.Pizza.API.Providers
@@ -9,6 +11,8 @@ namespace Ehrlich.Pizza.API.Providers
         Task<GetOrders.Response> GetOrdersAsync(GetOrders.Query query);
         Task<GetOrderAmount.Response> GetOrderAmountAsync(GetOrderAmount.Query query);
         Task<GetProfit.Response> GetProfitAsync(GetProfit.Query query);
+        Task<AddOrder.Response> AddOrderAsync(DateTime dateTime);
+        Task<UpdateOrder.Response> UpdateOrderAsync(UpdateOrder.Request request);
     }
 
     public class OrdersProvider : IOrdersProvider
@@ -77,6 +81,49 @@ namespace Ehrlich.Pizza.API.Providers
             return new GetProfit.Response()
             {
                 TotalProfit = totalProfit,
+            };
+        }
+
+        public async Task<AddOrder.Response> AddOrderAsync(DateTime dateTime)
+        {
+            DateOnly date = DateOnly.FromDateTime(dateTime);
+            TimeOnly time = TimeOnly.FromDateTime(dateTime);
+
+            long latestOrderId = await _context.Orders.MaxAsync(o => o.OrderId);
+            long newOrderId = latestOrderId + 1;
+            Order newOrder = new Order
+            {
+                OrderId = newOrderId,
+                Date = date,
+                Time = time
+            };
+
+            _context.Orders.Add(newOrder);
+            await _context.SaveChangesAsync();
+
+            return new AddOrder.Response()
+            {
+                Success = true,
+            };
+        }
+
+        public async Task<UpdateOrder.Response> UpdateOrderAsync(UpdateOrder.Request request)
+        {
+            Order order = await _context.Orders.FindAsync(request.OrderId);
+            order.Date = DateOnly.FromDateTime(request.DateTime);
+            order.Time = TimeOnly.FromDateTime(request.DateTime);
+            int result = await _context.SaveChangesAsync();
+            if (result > 0)
+            {
+                return new UpdateOrder.Response()
+                {
+                    Success = true,
+                };
+            }
+            return new UpdateOrder.Response()
+            {
+                Success = false,
+                Result = new BadRequestObjectResult("Update operation failed."),
             };
         }
 
